@@ -1,46 +1,38 @@
 """
-This is a hello world add-on for DocumentCloud.
-
-It demonstrates how to write a add-on which can be activated from the
-DocumentCloud add-on system and run using Github Actions.  It receives data
-from DocumentCloud via the request dispatch and writes data back to
-DocumentCloud using the standard API
+This is a Filecoin add-on for DocumentCloud.
 """
 
+import os
+
+import requests
 from documentcloud.addon import AddOn
 
 
-class HelloWorld(AddOn):
-    """An example Add-On for DocumentCloud."""
-
+class Filecoin(AddOn):
     def main(self):
-        """The main add-on functionality goes here."""
-        # fetch your add-on specific data
-        name = self.data.get("name", "world")
+        """Push the file to filecoin and store the IPFS CID back to DocumentCloud"""
 
-        self.set_message("Hello World start!")
+        estuary_token = os.environ["ESTUARY_TOKEN"]
 
-        # add a hello note to the first page of each selected document
-        if self.documents:
-            length = len(self.documents)
-            for i, doc_id in enumerate(self.documents):
-                self.set_progress(100 * i // length)
-                document = self.client.documents.get(doc_id)
-                document.annotations.create(f"Hello {name}!", 0)
-        elif self.query:
-            documents = self.client.documents.search(self.query)[:3]
-            length = len(documents)
-            for i, document in enumerate(documents):
-                self.set_progress(100 * i // length)
-                document.annotations.create(f"Hello {name}!", 0)
-
-        with open("hello.txt", "w+") as file_:
-            file_.write("Hello world!")
-            self.upload_file(file_)
-
-        self.set_message("Hello World end!")
-        self.send_mail("Hello World!", "We finished!")
+        for doc_id in self.documents:
+            document = self.client.documents.get(doc_id)
+            response = requests.post(
+                "https://shuttle-4.estuary.tech/content/add",
+                headers={"Authorization": f"Bearer {estuary_token}"},
+                files={
+                    "data": (f"{document.slug}.pdf", document.pdf, "application/pdf")
+                },
+            )
+            if response.status_code != 200:
+                self.set_message("Uploading failed")
+                return
+            else:
+                data = response.json()
+                document.data["cid"] = [data["cid"]]
+                document.data["estuaryId"] = [str(data["estuaryId"])]
+                document.data["ipfsUrl"] = [f"https://dweb.link/ipfs/{data['cid']}"]
+                document.save()
 
 
 if __name__ == "__main__":
-    HelloWorld().main()
+    Filecoin().main()
