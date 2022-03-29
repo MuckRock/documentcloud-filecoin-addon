@@ -3,4 +3,6 @@ description: >-
   Store the selected files to Filecoin and IPFS.  The retrieval information
   will be stored in the document's key-value data.
 type: object
+documents:
+  - selected
 properties: {}
