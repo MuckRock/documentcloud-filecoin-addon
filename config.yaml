@@ -4,6 +4,7 @@ description: >-
   via Estuary. Once the run is complete, you’ll be given a working IPFS address
   for the document, which will make it more resilient from outages and removals.
 
+
   **Warning**: Once you run this Add-On, you cannot remove the document from
   the IPFS and Filecoin networks! This action cannot be undone.
   [Learn more about Estuary](https://docs.estuary.tech/what-is-estuary) and
