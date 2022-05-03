@@ -30,8 +30,10 @@ class Filecoin(AddOn):
                 data = response.json()
                 document.data["cid"] = [data["cid"]]
                 document.data["estuaryId"] = [str(data["estuaryId"])]
-                document.data["ipfsUrl"] = [f"https://dweb.link/ipfs/{data['cid']}"]
+                ipfs_url = f"https://dweb.link/ipfs/{data['cid']}"
+                document.data["ipfsUrl"] = [ipfs_url]
                 document.save()
+                self.set_message(f"Upload complete - {ipfs_url}")
 
 
 if __name__ == "__main__":
