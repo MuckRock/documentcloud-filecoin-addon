@@ -5,5 +5,5 @@ on: repository_dispatch
 jobs:
   Run-Add-On:
     uses: MuckRock/documentcloud-addon-workflows/.github/workflows/run-addon.yml@v1
-    env:
-      ESTUARY_TOKEN: ${{ secrets.ESTUARY_TOKEN }}
+    secrets:
+      token: ${{ secrets.ESTUARY_TOKEN }}

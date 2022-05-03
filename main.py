@@ -12,7 +12,7 @@ class Filecoin(AddOn):
     def main(self):
         """Push the file to filecoin and store the IPFS CID back to DocumentCloud"""
 
-        estuary_token = os.environ["ESTUARY_TOKEN"]
+        estuary_token = os.environ["TOKEN"]
 
         for doc_id in self.documents:
             document = self.client.documents.get(doc_id)
