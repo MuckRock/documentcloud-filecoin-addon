@@ -14,7 +14,8 @@ class Filecoin(AddOn):
 
         estuary_token = os.environ["TOKEN"]
 
-        for document in self.get_documents():
+        total = self.get_document_count()
+        for i, document in enumerate(self.get_documents()):
             response = requests.post(
                 "https://shuttle-4.estuary.tech/content/add",
                 headers={"Authorization": f"Bearer {estuary_token}"},
@@ -33,6 +34,7 @@ class Filecoin(AddOn):
                 document.data["ipfsUrl"] = [ipfs_url]
                 document.save()
                 self.set_message(f"Upload complete - {ipfs_url}")
+                self.set_progress(int(100 * i / total))
 
 
 if __name__ == "__main__":
