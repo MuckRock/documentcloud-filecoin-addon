@@ -34,7 +34,7 @@ class Filecoin(AddOn):
                 document.data["ipfsUrl"] = [ipfs_url]
                 document.save()
                 self.set_message(f"Upload complete - {ipfs_url}")
-                self.set_progress(int(100 * i / total))
+                self.set_progress(int(100 * (i + 1)/ total))
 
 
 if __name__ == "__main__":
