@@ -14,8 +14,7 @@ class Filecoin(AddOn):
 
         estuary_token = os.environ["TOKEN"]
 
-        for doc_id in self.documents:
-            document = self.client.documents.get(doc_id)
+        for document in self.get_documents():
             response = requests.post(
                 "https://shuttle-4.estuary.tech/content/add",
                 headers={"Authorization": f"Bearer {estuary_token}"},
