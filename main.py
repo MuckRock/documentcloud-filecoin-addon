@@ -25,7 +25,7 @@ class Filecoin(AddOn):
             )
             if response.status_code != 200:
                 self.set_message("Uploading failed")
-                return
+                response.raise_for_status()
             else:
                 data = response.json()
                 document.data["cid"] = [data["cid"]]
