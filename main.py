@@ -4,8 +4,8 @@ This is a Filecoin add-on for DocumentCloud.
 
 import os
 
-import requests
 from documentcloud.addon import AddOn
+from documentcloud.toolbox import requests_retry_session
 
 
 class Filecoin(AddOn):
@@ -16,12 +16,13 @@ class Filecoin(AddOn):
 
         total = self.get_document_count()
         for i, document in enumerate(self.get_documents()):
-            response = requests.post(
+            response = requests_retry_session().post(
                 "https://shuttle-4.estuary.tech/content/add",
                 headers={"Authorization": f"Bearer {estuary_token}"},
                 files={
                     "data": (f"{document.slug}.pdf", document.pdf, "application/pdf")
                 },
+                timeout=
             )
             if response.status_code != 200:
                 self.set_message("Uploading failed")
