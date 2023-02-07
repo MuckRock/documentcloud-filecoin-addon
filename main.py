@@ -7,9 +7,10 @@ from datetime import datetime
 
 from documentcloud.addon import AddOn
 from documentcloud.toolbox import requests_retry_session
+from documentcloud.addon import SoftTimeOutAddOn
 
-
-class Filecoin(AddOn):
+class Filecoin(SoftTimeOutAddOn):
+    soft_time_limit = 300 
     def main(self):
         """Push the file to filecoin and store the IPFS CID back to DocumentCloud"""
 
