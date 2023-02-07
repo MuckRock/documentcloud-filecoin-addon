@@ -19,7 +19,7 @@ class Filecoin(AddOn):
         print(f"{datetime.now()} - Total documents: {total}")
         for i, document in enumerate(self.get_documents()):
             print(f"{datetime.now()} - Uploading {i} {document.slug} size {len(document.pdf)}")
-            response = requests_retry_session().post(
+            response = requests_retry_session(retries=8).post(
                 "https://upload.estuary.tech/content/add",
                 headers={"Authorization": f"Bearer {estuary_token}"},
                 files={
