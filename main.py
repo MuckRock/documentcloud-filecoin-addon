@@ -4,6 +4,7 @@ This is a Filecoin add-on for DocumentCloud.
 
 import os
 from datetime import datetime
+import sys
 
 from documentcloud.addon import AddOn
 from documentcloud.toolbox import requests_retry_session
@@ -46,4 +47,5 @@ class Filecoin(SoftTimeOutAddOn):
 
 
 if __name__ == "__main__":
+    print(sys.argv)
     Filecoin().main()
