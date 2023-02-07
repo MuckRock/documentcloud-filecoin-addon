@@ -13,3 +13,4 @@ type: object
 documents:
   - selected
 properties: {}
+version: 2
