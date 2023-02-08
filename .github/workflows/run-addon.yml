@@ -7,5 +7,6 @@ jobs:
     uses: MuckRock/documentcloud-addon-workflows/.github/workflows/run-addon.yml@v1
     with:
       timeout: 30
+      mask-inputs: false
     secrets:
       token: ${{ secrets.ESTUARY_TOKEN }}
