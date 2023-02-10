@@ -3,6 +3,7 @@ This is a Filecoin add-on for DocumentCloud.
 """
 
 import os
+import time
 from datetime import datetime
 
 from documentcloud.addon import AddOn
@@ -31,7 +32,10 @@ class Filecoin(SoftTimeOutAddOn):
             if response.status_code != 200:
                 print(f"{datetime.now()} - Uploading {i} {document.slug} failed")
                 self.set_message("Uploading failed")
-                response.raise_for_status()
+                # sleep until soft time out limit 
+                time.sleep(self._start + self.soft_time_limit - time.time())
+                self.rerun_addon(include_current=True)
+                return
             else:
                 print(f"{datetime.now()} - Set metadata for {i} {document.slug}")
                 data = response.json()
