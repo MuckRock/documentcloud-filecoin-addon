@@ -3,15 +3,26 @@ This is a Filecoin add-on for DocumentCloud.
 """
 
 import os
+import sys
 import time
 from datetime import datetime
 
-from documentcloud.addon import AddOn
+from documentcloud.addon import AddOn, SoftTimeOutAddOn
 from documentcloud.toolbox import requests_retry_session
-from documentcloud.addon import SoftTimeOutAddOn
+from requests.exceptions import RequestException
+
 
 class Filecoin(SoftTimeOutAddOn):
     soft_time_limit = 240
+
+    def fail(self, i, document):
+        print(f"{datetime.now()} - Uploading {i} {document.slug} failed")
+        self.set_message("Uploading failed")
+        # sleep until soft time out limit 
+        time.sleep(self._start + self.soft_time_limit - time.time())
+        self.rerun_addon(include_current=True)
+        sys.exit()
+
     def main(self):
         """Push the file to filecoin and store the IPFS CID back to DocumentCloud"""
 
@@ -21,21 +32,19 @@ class Filecoin(SoftTimeOutAddOn):
         print(f"{datetime.now()} - Total documents: {total}")
         for i, document in enumerate(self.get_documents()):
             print(f"{datetime.now()} - Uploading {i} {document.slug} size {len(document.pdf)}")
-            response = requests_retry_session(retries=8).post(
-                "https://upload.estuary.tech/content/add",
-                headers={"Authorization": f"Bearer {estuary_token}"},
-                files={
-                    "data": (f"{document.slug}.pdf", document.pdf, "application/pdf")
-                },
-            )
+            try:
+                response = requests_retry_session(retries=8).post(
+                    "https://upload.estuary.tech/content/add",
+                    headers={"Authorization": f"Bearer {estuary_token}"},
+                    files={
+                        "data": (f"{document.slug}.pdf", document.pdf, "application/pdf")
+                    },
+                )
+            except RequestException:
+                self.fail(i, document)
             print(f"{datetime.now()} - Uploading {i} {document.slug} complete")
             if response.status_code != 200:
-                print(f"{datetime.now()} - Uploading {i} {document.slug} failed")
-                self.set_message("Uploading failed")
-                # sleep until soft time out limit 
-                time.sleep(self._start + self.soft_time_limit - time.time())
-                self.rerun_addon(include_current=True)
-                return
+                self.fail(i, document)
             else:
                 print(f"{datetime.now()} - Set metadata for {i} {document.slug}")
                 data = response.json()
