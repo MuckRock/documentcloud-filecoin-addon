@@ -13,8 +13,6 @@ from requests.exceptions import RequestException
 
 
 class Filecoin(SoftTimeOutAddOn):
-    soft_time_limit = 240
-
     def fail(self, i, document):
         print(f"{datetime.now()} - Uploading {i} {document.slug} failed")
         self.set_message("Uploading failed")
