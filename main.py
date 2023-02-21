@@ -53,8 +53,11 @@ class Filecoin(SoftTimeOutAddOn):
                 ipfs_url = f"https://dweb.link/ipfs/{data['cid']}"
                 document.data["ipfsUrl"] = [ipfs_url]
                 document.save()
-                self.set_message(f"Upload complete - {ipfs_url}")
-                self.set_progress(int(100 * (i + 1)/ total))
+                try:
+                    self.set_message(f"Upload complete - {ipfs_url}")
+                    self.set_progress(int(100 * (i + 1)/ total))
+                except RequestException:
+                    print("Error updating message/progress")
                 print(f"{datetime.now()} - Set metadata for {i} {document.slug} done")
 
 
