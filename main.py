@@ -16,8 +16,8 @@ class Filecoin(SoftTimeOutAddOn):
     def fail(self, i, document):
         print(f"{datetime.now()} - Uploading {i} {document.slug} failed")
         self.set_message("Uploading failed")
-        # sleep until soft time out limit 
-        time.sleep(self._start + self.soft_time_limit - time.time())
+        # sleep until soft time out limit
+        time.sleep(max(self._start + self.soft_time_limit - time.time(), 0))
         self.rerun_addon(include_current=True)
         sys.exit()
 
@@ -29,13 +29,20 @@ class Filecoin(SoftTimeOutAddOn):
         total = self.get_document_count()
         print(f"{datetime.now()} - Total documents: {total}")
         for i, document in enumerate(self.get_documents()):
-            print(f"{datetime.now()} - Uploading {i} {document.slug} size {len(document.pdf)}")
+            print(
+                f"{datetime.now()} - Uploading {i} {document.slug} size "
+                f"{len(document.pdf)}"
+            )
             try:
                 response = requests_retry_session(retries=8).post(
                     "https://upload.estuary.tech/content/add",
                     headers={"Authorization": f"Bearer {estuary_token}"},
                     files={
-                        "data": (f"{document.slug}.pdf", document.pdf, "application/pdf")
+                        "data": (
+                            f"{document.slug}.pdf",
+                            document.pdf,
+                            "application/pdf",
+                        )
                     },
                 )
             except RequestException:
@@ -53,7 +60,7 @@ class Filecoin(SoftTimeOutAddOn):
                 document.save()
                 try:
                     self.set_message(f"Upload complete - {ipfs_url}")
-                    self.set_progress(int(100 * (i + 1)/ total))
+                    self.set_progress(int(100 * (i + 1) / total))
                 except RequestException:
                     print("Error updating message/progress")
                 print(f"{datetime.now()} - Set metadata for {i} {document.slug} done")
