@@ -35,7 +35,7 @@ class Filecoin(SoftTimeOutAddOn):
             )
             try:
                 response = requests_retry_session(retries=8).post(
-                    "https://upload.estuary.tech/content/add",
+                    "https://api.estuary.tech/content/add",
                     headers={"Authorization": f"Bearer {estuary_token}"},
                     files={
                         "data": (
@@ -48,7 +48,11 @@ class Filecoin(SoftTimeOutAddOn):
             except RequestException:
                 self.fail(i, document)
             print(f"{datetime.now()} - Uploading {i} {document.slug} complete")
-            if response.status_code != 200:
+            if response.status_code >= 400:
+                print(response.text)
+                response.raise_for_status()
+            elif response.status_code >= 500:
+                print(response.text)
                 self.fail(i, document)
             else:
                 print(f"{datetime.now()} - Set metadata for {i} {document.slug}")
