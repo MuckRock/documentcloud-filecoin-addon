@@ -45,7 +45,8 @@ class Filecoin(SoftTimeOutAddOn):
                         )
                     },
                 )
-            except RequestException:
+            except RequestException as exc:
+                print(exc)
                 self.fail(i, document)
             print(f"{datetime.now()} - Uploading {i} {document.slug} complete")
             if response.status_code >= 400:
