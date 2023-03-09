@@ -44,6 +44,7 @@ class Filecoin(SoftTimeOutAddOn):
                             "application/pdf",
                         )
                     },
+                    timeout=30,
                 )
             except RequestException as exc:
                 print(exc)
