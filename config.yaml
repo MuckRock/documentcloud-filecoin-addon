@@ -14,4 +14,6 @@ documents:
   - selected
   - query
 properties: {}
+categories:
+  - export
 version: 2
