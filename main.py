@@ -23,7 +23,10 @@ class Filecoin(SoftTimeOutAddOn):
 
     def main(self):
         """Push the file to filecoin and store the IPFS CID back to DocumentCloud"""
-
+        if not self.documents:
+            self.set_message("Please select at least one document.")
+            return
+            
         estuary_token = os.environ["TOKEN"]
 
         total = self.get_document_count()
