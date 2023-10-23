@@ -9,6 +9,7 @@ description: >-
   the IPFS and Filecoin networks! This action cannot be undone.
   [Learn more about Estuary](https://docs.estuary.tech/what-is-estuary) and
   [IPFS](https://docs.ipfs.io/concepts/what-is-ipfs/).
+instructions: ''
 type: object
 documents:
   - selected
