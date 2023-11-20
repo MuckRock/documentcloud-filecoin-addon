@@ -4,9 +4,9 @@ on: repository_dispatch
 
 jobs:
   Run-Add-On:
-    uses: MuckRock/documentcloud-addon-workflows/.github/workflows/run-addon.yml@v1
+    uses: MuckRock/documentcloud-addon-workflows/.github/workflows/run-addon.yml@node
     with:
       timeout: 30
-      mask-inputs: true
+      npm-packages: "@web3-storage/w3cli"
     secrets:
-      token: ${{ secrets.ESTUARY_TOKEN }}
+      token: ${{ secrets.AUTH }}
