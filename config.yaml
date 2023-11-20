@@ -1,20 +1,20 @@
-title: Push to IPFS/Filecoin
+title: Web3 Storage
 description: >-
   This Add-On pushes the selected documents to IPFS and the Filecoin network
-  via Estuary. Once the run is complete, you’ll be given a working IPFS address
-  for the document, which will make it more resilient from outages and removals.
+  via the web3.storage service. Once the run is complete, you’ll be given a
+  working IPFS address for the document, which will make it more resilient from
+  outages and removals.
 
 
   **Warning**: Once you run this Add-On, you cannot remove the document from
   the IPFS and Filecoin networks! This action cannot be undone.
-  [Learn more about Estuary](https://docs.estuary.tech/what-is-estuary) and
+  [Learn more about web3.storage](https://web3.storage/) and
   [IPFS](https://docs.ipfs.io/concepts/what-is-ipfs/).
-instructions: ''
 type: object
 documents:
   - selected
   - query
 properties: {}
-categories:
+categories: 
   - export
 version: 2

@@ -1,75 +1,47 @@
 """
-This is a Filecoin add-on for DocumentCloud.
+This is a Filecoin add-on for DocumentCloud, using the web3.storage service
 """
 
 import os
-import sys
-import time
+import subprocess
 from datetime import datetime
 
-from documentcloud.addon import AddOn, SoftTimeOutAddOn
-from documentcloud.toolbox import requests_retry_session
-from requests.exceptions import RequestException
+from documentcloud.addon import SoftTimeOutAddOn
 
 
-class Filecoin(SoftTimeOutAddOn):
-    def fail(self, i, document):
-        print(f"{datetime.now()} - Uploading {i} {document.slug} failed")
-        self.set_message("Uploading failed")
-        # sleep until soft time out limit
-        time.sleep(max(self._start + self.soft_time_limit - time.time(), 0))
-        self.rerun_addon(include_current=True)
-        sys.exit()
+class Web3Storage(SoftTimeOutAddOn):
+    """Add-On to upload files to Filecoin via web3.storage"""
 
     def main(self):
-        """Push the file to filecoin and store the IPFS CID back to DocumentCloud"""
-        estuary_token = os.environ["TOKEN"]
 
-        total = self.get_document_count()
-        print(f"{datetime.now()} - Total documents: {total}")
+        os.makedirs(f"{os.environ['HOME']}/.config/w3access/")
+        with open(
+            f"{os.environ['HOME']}/.config/w3access/w3cli.json", "w"
+        ) as config_file:
+            config_file.write(os.environ["TOKEN"])
+
         for i, document in enumerate(self.get_documents()):
+            self.set_message(f"Uploading {document.title}...")
             print(
                 f"{datetime.now()} - Uploading {i} {document.slug} size "
                 f"{len(document.pdf)}"
             )
-            try:
-                response = requests_retry_session(retries=8).post(
-                    "https://api.estuary.tech/content/add",
-                    headers={"Authorization": f"Bearer {estuary_token}"},
-                    files={
-                        "data": (
-                            f"{document.slug}.pdf",
-                            document.pdf,
-                            "application/pdf",
-                        )
-                    },
-                    timeout=30,
-                )
-            except RequestException as exc:
-                print(exc)
-                self.fail(i, document)
-            print(f"{datetime.now()} - Uploading {i} {document.slug} complete")
-            if response.status_code >= 400:
-                print(response.text)
-                response.raise_for_status()
-            elif response.status_code >= 500:
-                print(response.text)
-                self.fail(i, document)
-            else:
-                print(f"{datetime.now()} - Set metadata for {i} {document.slug}")
-                data = response.json()
-                document.data["cid"] = [data["cid"]]
-                document.data["estuaryId"] = [str(data["estuaryId"])]
-                ipfs_url = f"https://dweb.link/ipfs/{data['cid']}"
-                document.data["ipfsUrl"] = [ipfs_url]
-                document.save()
-                try:
-                    self.set_message(f"Upload complete - {ipfs_url}")
-                    self.set_progress(int(100 * (i + 1) / total))
-                except RequestException:
-                    print("Error updating message/progress")
-                print(f"{datetime.now()} - Set metadata for {i} {document.slug} done")
+            with open(f"{document.slug}.pdf", "wb") as pdf:
+                pdf.write(document.pdf)
+            result = subprocess.run(
+                ["w3", "up", f"{document.slug}.pdf"], capture_output=True
+            )
+            if result.returncode != 0:
+                self.set_message(f"Error: {result.stderr}")
+                raise ValueError(result.stderr)
+
+            link = result.stdout.decode("utf8").strip()[2:]
+            document.data["ipfsUrl"] = [link]
+            cid = link[link.rfind("/") + 1 :]
+            document.data["cid"] = cid
+            document.save()
+            os.remove(f"{document.slug}.pdf")
 
 
 if __name__ == "__main__":
-    Filecoin().main()
+    Web3Storage().main()
