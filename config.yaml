@@ -1,4 +1,4 @@
-title: Web3 Storage
+title: Push to IPFS/Filecoin
 description: >-
   This Add-On pushes the selected documents to IPFS and the Filecoin network
   via the web3.storage service. Once the run is complete, you’ll be given a
