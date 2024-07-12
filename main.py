@@ -21,7 +21,8 @@ class Web3Storage(SoftTimeOutAddOn):
             config_file.write(os.environ["TOKEN"])
 
         for i, document in enumerate(self.get_documents()):
-            self.set_message(f"Uploading {document.title}...")
+            truncated_title = document.title[:220]
+            self.set_message(f"Uploading {truncated_title}...")
             print(
                 f"{datetime.now()} - Uploading {i} {document.slug} size "
                 f"{len(document.pdf)}"
