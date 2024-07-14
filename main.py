@@ -1,11 +1,11 @@
 """
 This is a Filecoin add-on for DocumentCloud, using the web3.storage service
 """
-
+# pylint: disable=R0903
 import os
 import subprocess
 from datetime import datetime
-
+# pylint: disable=E0611
 from documentcloud.addon import SoftTimeOutAddOn
 
 
@@ -13,10 +13,10 @@ class Web3Storage(SoftTimeOutAddOn):
     """Add-On to upload files to Filecoin via web3.storage"""
 
     def main(self):
-
+        """ Uses w3 command line tool to upload documents """
         os.makedirs(f"{os.environ['HOME']}/.config/w3access/")
         with open(
-            f"{os.environ['HOME']}/.config/w3access/w3cli.json", "w"
+            f"{os.environ['HOME']}/.config/w3access/w3cli.json", "w", encoding='utf-8'
         ) as config_file:
             config_file.write(os.environ["TOKEN"])
 
@@ -29,6 +29,8 @@ class Web3Storage(SoftTimeOutAddOn):
             )
             with open(f"{document.slug}.pdf", "wb") as pdf:
                 pdf.write(document.pdf)
+            # pylint: disable=W1510
+            # disabling this check because we handle the return code manually
             result = subprocess.run(
                 ["w3", "up", f"{document.slug}.pdf"], capture_output=True
             )
