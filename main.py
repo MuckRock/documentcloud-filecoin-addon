@@ -33,7 +33,7 @@ class Web3Storage(SoftTimeOutAddOn):
                 ["w3", "up", f"{document.slug}.pdf"], capture_output=True
             )
             if result.returncode != 0:
-                self.set_message(f"Error: {result.stderr}")
+                self.set_message(f"Error: {result.stderr[:220]}")
                 raise ValueError(result.stderr)
 
             link = result.stdout.decode("utf8").strip()[2:]
