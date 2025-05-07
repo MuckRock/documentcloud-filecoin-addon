@@ -7,9 +7,13 @@ description: >-
 
 
   **Warning**: Once you run this Add-On, you cannot remove the document from
-  the IPFS and Filecoin networks! This action cannot be undone.
+  the IPFS and Filecoin networks! This action cannot be undone. 
+  Read about [our efforts](https://www.muckrock.com/news/archives/2024/sep/11/featured-add-on-push-to-ipfs-filecoin/) 
+  to preserve at risk documents with the help of the Filecoin Foundation for the Decentralized Web. 
   [Learn more about web3.storage](https://web3.storage/) and
   [IPFS](https://docs.ipfs.io/concepts/what-is-ipfs/).
+
+
 type: object
 documents:
   - selected
