@@ -14,6 +14,7 @@ class Web3Storage(SoftTimeOutAddOn):
 
     def main(self):
         """ Uses w3 command line tool to upload documents """
+        self.client.session.headers.update({'User-Agent': 'Push to IPFS Add-On'})
         os.makedirs(f"{os.environ['HOME']}/.config/w3access/")
         with open(
             f"{os.environ['HOME']}/.config/w3access/w3cli.json", "w", encoding='utf-8'
