@@ -7,6 +7,6 @@ jobs:
     uses: MuckRock/documentcloud-addon-workflows/.github/workflows/run-addon.yml@node
     with:
       timeout: 30
-      npm-packages: "@web3-storage/w3cli"
+      npm-packages: "filecoin-pin@latest"
     secrets:
-      token: ${{ secrets.AUTH }}
+      token: ${{ secrets.PRIVATE_KEY }}
