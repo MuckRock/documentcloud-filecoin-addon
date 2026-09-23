@@ -78,7 +78,9 @@ class FilecoinPin(SoftTimeOutAddOn):
                 raise ValueError(f"{cid} not found in IPNI after polling")
             # Both documents that were indexed immediately
             # and which the poller later found to be indexed get tagged with their ipfsUrl
-            self.tag_document(document, "ipfsUrl", [f"ipfs://{cid}"])
+            self.tag_document(
+                document, "ipfsUrl", [f"https://{cid}.ipfs.dweb.link"]
+            )
 
     def pin_file(self, filename, env):
         """Runs filecoin-pin add and returns the root CID and whether IPNI has it"""
