@@ -92,8 +92,11 @@ class FilecoinPin(SoftTimeOutAddOn):
         stderr = ANSI_ESCAPE.sub("", result.stderr.decode("utf8", errors="replace"))
 
         if result.returncode != 0:
+            print(f"filecoin-pin exited with code {result.returncode}")
+            print(f"stdout:\n{stdout}")
+            print(f"stderr:\n{stderr}")
             self.set_message(f"Error: {stderr[:220] or stdout[-220:]}")
-            raise ValueError(stderr or stdout)
+            raise ValueError(f"filecoin-pin add failed (exit {result.returncode})")
 
         match = ROOT_CID_RE.search(stdout)
         if not match:
