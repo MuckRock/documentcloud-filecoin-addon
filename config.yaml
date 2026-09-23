@@ -1,16 +1,16 @@
 title: Push to IPFS/Filecoin
 description: >-
   This Add-On pushes the selected documents to IPFS and the Filecoin network
-  via the web3.storage service. Once the run is complete, you’ll be given a
-  working IPFS address for the document, which will make it more resilient from
-  outages and removals.
+  via the Filecoin Pin service. Once the run is complete, you’ll be given a
+  working IPFS address for the document saved on the document as a key/value pair
+  which will make it more resilient from outages and removals.
 
 
   **Warning**: Once you run this Add-On, you cannot remove the document from
   the IPFS and Filecoin networks! This action cannot be undone. 
   Read about [our efforts](https://www.muckrock.com/news/archives/2024/sep/11/featured-add-on-push-to-ipfs-filecoin/) 
   to preserve at risk documents with the help of the Filecoin Foundation for the Decentralized Web. 
-  [Learn more about web3.storage](https://web3.storage/) and
+  [Learn more about Filecoin Pin](https://docs.filecoin.io/build-on-filecoin/cookbook/filecoin-pin) and
   [IPFS](https://docs.ipfs.io/concepts/what-is-ipfs/).
 
 
