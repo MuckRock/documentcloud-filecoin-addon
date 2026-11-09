@@ -163,4 +163,4 @@ class FilecoinPin(SoftTimeOutAddOn):
 
 
 if __name__ == "__main__":
-    FilecoinPin().main()
+    # FilecoinPin().main()
